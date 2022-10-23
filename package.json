@@ -6,14 +6,23 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "babel-core": "^6.26.3",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-jwt": "^7.7.5",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.15",
+    "md5": "^2.3.0",
+    "moment": "^2.29.4",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
+    "validator": "^13.7.0",
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0"
   }
 }

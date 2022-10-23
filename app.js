@@ -7,9 +7,10 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan')
 const logger = require('./logger')
 
+require('./tools/global');
+
 // 路由文件引用
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 
 // Express 引用实例化
 const app = express();
@@ -31,14 +32,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 //  捕捉404错误 catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-
+app.use(async (req, res, next) => {
+  try {
+    console.log(req.request)
+    await next();
+  } catch (err) {
+    res.status = err.status || 500;
+    res.render('error');
+  }
+});
 
 //这里错误处理改成自己的
 

@@ -1,14 +1,27 @@
-var express = require('express');
-var router = express.Router();
-const userController = require('../controllers/user');
+const fs = require('fs')
+const path = require('path');
+const express = require('express');
+const router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-// 获取用户信息
-router.get('/get_user', userController.showUser);
-
-
+try {
+    let files = fs.readdirSync(path.resolve(__dirname));
+    for (let file of files) {
+        if ((file.endsWith('.js') || file.endsWith('.ts')) && file !== 'index.js' && file !== 'index.ts') {
+            let routerName = '/api/v1';
+            let fileName = path.basename(file, '.js');
+            fileName = path.basename(fileName, '.ts');
+            fileName.split('.').forEach((name) => { if (name) routerName += '/' + name; });
+            if (routerName) {
+                (async function (routerName) {
+                    let childRouter = await import(`./${file}`);
+                    router.use(routerName, childRouter.default);
+                }(routerName));
+            } else {
+                console.error('路由加载失败', file);
+            }
+        }
+    }
+} catch (ex) {
+    console.error('路由加载异常', ex);
+}
 module.exports = router;
